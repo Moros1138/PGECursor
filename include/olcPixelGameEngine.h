@@ -4580,11 +4580,15 @@ namespace olc
 
 namespace olc
 {
+	static HCURSOR olc_CurrentCursor;
+
 	class Platform_Windows : public olc::Platform
 	{
 	private:
 		HWND olc_hWnd = nullptr;
 		std::wstring wsAppName;
+		
+		HCURSOR olc_VisibleCursor;
 
 		std::wstring ConvertS2W(std::string s)
 		{
@@ -4627,9 +4631,12 @@ namespace olc
 
 		virtual olc::rcode CreateWindowPane(const olc::vi2d& vWindowPos, olc::vi2d& vWindowSize, bool bFullScreen) override
 		{
+			olc_VisibleCursor = LoadCursor(NULL, IDC_ARROW);
+			olc_CurrentCursor = olc_VisibleCursor;
+
 			WNDCLASS wc;
 			wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
-			wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+			wc.hCursor = olc_CurrentCursor;
 			wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
 			wc.hInstance = GetModuleHandle(nullptr);
 			wc.lpfnWndProc = olc_WindowEvent;
@@ -4724,6 +4731,20 @@ namespace olc
 			return olc::OK;
 		}
 
+		virtual olc::rcode ShowSystemCursor(bool state) override
+		{
+			// // show the damn cursor!
+			if(state)
+			{
+				olc_CurrentCursor = olc_VisibleCursor;
+				return olc::OK;
+			}
+
+			// // if we're here, we're hiding the cursor, mwahahahahahaha
+			olc_CurrentCursor = NULL;
+			return olc::OK;
+		}
+
 		virtual olc::rcode StartSystemEventLoop() override
 		{
 			MSG msg;
@@ -4750,6 +4771,7 @@ namespace olc
 				ptrPGE->olc_UpdateMouse(ix, iy);
 				return 0;
 			}
+			case WM_SETCURSOR: SetCursor(olc_CurrentCursor); return 0;
 			case WM_SIZE:       ptrPGE->olc_UpdateWindowSize(lParam & 0xFFFF, (lParam >> 16) & 0xFFFF);	return 0;
 			case WM_MOUSEWHEEL:	ptrPGE->olc_UpdateMouseWheel(GET_WHEEL_DELTA_WPARAM(wParam));           return 0;
 			case WM_MOUSELEAVE: ptrPGE->olc_UpdateMouseFocus(false);                                    return 0;
