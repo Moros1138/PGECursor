@@ -195,7 +195,7 @@
 
 	Author
 	~~~~~~
-	David Barr, aka javidx9, ©OneLoneCoder 2018, 2019, 2020, 2021, 2022
+	David Barr, aka javidx9, ï¿½OneLoneCoder 2018, 2019, 2020, 2021, 2022
 */
 #pragma endregion
 
@@ -876,6 +876,7 @@ namespace olc
 		virtual olc::rcode CreateGraphics(bool bFullScreen, bool bEnableVSYNC, const olc::vi2d& vViewPos, const olc::vi2d& vViewSize) = 0;
 		virtual olc::rcode CreateWindowPane(const olc::vi2d& vWindowPos, olc::vi2d& vWindowSize, bool bFullScreen) = 0;
 		virtual olc::rcode SetWindowTitle(const std::string& s) = 0;
+		virtual olc::rcode ShowSystemCursor(bool state) = 0;
 		virtual olc::rcode StartSystemEventLoop() = 0;
 		virtual olc::rcode HandleSystemEvent() = 0;
 		static olc::PixelGameEngine* ptrPGE;
@@ -980,8 +981,8 @@ namespace olc
 		void SetPixelMode(std::function<olc::Pixel(const int x, const int y, const olc::Pixel& pSource, const olc::Pixel& pDest)> pixelMode);
 		// Change the blend factor from between 0.0f to 1.0f;
 		void SetPixelBlend(float fBlend);
-
-
+		// Show the System Mouse Cursor, true = visible, false = hidden
+		void ShowSystemCursor(bool state);
 
 	public: // DRAWING ROUTINES
 		// Draws a single Pixel
@@ -1829,6 +1830,12 @@ namespace olc
 		else
 			return 0;
 	}
+
+	void PixelGameEngine::ShowSystemCursor(bool state)
+	{
+		platform->ShowSystemCursor(state);
+	}
+
 
 	uint32_t PixelGameEngine::GetFPS() const
 	{ return nLastFPS; }
