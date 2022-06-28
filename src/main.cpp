@@ -16,13 +16,24 @@ public:
 		return true;
 	}
 
+	bool bCursorToggle = true;
+
 	bool OnUserUpdate(float fElapsedTime) override
 	{
-		// called once per frame
-		for (int x = 0; x < ScreenWidth(); x++)
-			for (int y = 0; y < ScreenHeight(); y++)
-				Draw(x, y, olc::Pixel(rand() % 255, rand() % 255, rand()% 255));	
-		return true;
+		
+		// Toggle System Mouse Cursor
+		if(GetKey(olc::SPACE).bPressed)
+		{
+			bCursorToggle = !bCursorToggle;
+			ShowSystemCursor(bCursorToggle);
+			std::cout << "Toggle\n";
+		}
+		
+		Clear(olc::BLACK);
+		FillCircle(GetMousePos(), 5, olc::RED);
+		DrawCircle(GetMousePos(), 5, olc::GREY);
+		
+		return !GetKey(olc::ESCAPE).bPressed;
 	}
 };
 
