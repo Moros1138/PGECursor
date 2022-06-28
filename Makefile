@@ -1,8 +1,10 @@
-PROJECT     := PGECursor
+PROJECT     := PGECursor.exe
+# PROJECT     := PGECursor
 
 RELEASE     := -O3
 DEBUG       := -ggdb3 -Og
-STATIC      := -Bstatic -static-libgcc -static-libstdc++
+STATIC      := -Bstatic -static-libgcc -static-libstdc++ -static
+# STATIC      := -Bstatic -static-libgcc -static-libstdc++
 SHARED      := -static-libstdc++
 
 BUILD       := $(DEBUG)
@@ -12,7 +14,8 @@ LINKTYPE    := $(STATIC)
 #LINKTYPE   := $(SHARED)
 
 CXX_FLAGS   := -std=c++17 $(BUILD) $(LINKTYPE)
-CXX         := g++
+CXX         := i686-w64-mingw32-g++
+# CXX         := g++
 
 BIN         := bin
 SRC         := src
@@ -24,7 +27,8 @@ RES         := res
 INC_FLAG    := -I$(INC)
 LIB_FLAG    := -L$(LIB)
 
-LIBRARIES   := -lX11 -lGL -lpthread -lpng -lstdc++fs 
+LIBRARIES   := -luser32 -lgdi32 -lopengl32 -lgdiplus -lshlwapi -ldwmapi -lstdc++fs
+# LIBRARIES   := -lX11 -lGL -lpthread -lpng -lstdc++fs 
 
 SOURCES     := $(wildcard $(SRC)/*.cpp)
 OBJECTS     := $(patsubst $(SRC)/%,$(OBJ)/%,$(SOURCES:.cpp=.o))
