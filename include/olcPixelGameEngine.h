@@ -4816,6 +4816,7 @@ namespace olc
 		X11::XVisualInfo* olc_VisualInfo;
 		X11::Colormap                olc_ColourMap;
 		X11::XSetWindowAttributes    olc_SetWindowAttribs;
+		X11::Cursor olc_InvisibleCursor;
 
 	public:
 		virtual olc::rcode ApplicationStartUp() override
@@ -4825,6 +4826,7 @@ namespace olc
 
 		virtual olc::rcode ApplicationCleanUp() override
 		{
+			XFreeCursor(olc_Display, olc_InvisibleCursor);
 			XDestroyWindow(olc_Display, olc_Window);
 			return olc::rcode::OK;
 		}
@@ -4907,6 +4909,21 @@ namespace olc
 				vWindowSize.y = gwa.height;
 			}
 
+
+			// Create Invisible Mouse Cursor
+			// Adapted from: https://stackoverflow.com/questions/660613/how-do-you-hide-the-mouse-pointer-under-linux-x11
+			Pixmap bitmapNoData;
+			XColor black;
+			
+			static char pixelData[] = { 0,0,0,0,0,0,0,0 };
+			black.red = black.green = black.blue = 0;
+
+			bitmapNoData = XCreateBitmapFromData(olc_Display, olc_Window, pixelData, 8, 8);
+			olc_InvisibleCursor = XCreatePixmapCursor(olc_Display, bitmapNoData, bitmapNoData, &black, &black, 0, 0);
+
+			// give the bitmap data back!
+			XFreePixmap(olc_Display, bitmapNoData);
+
 			// Create Keyboard Mapping
 			mapKeys[0x00] = Key::NONE;
 			mapKeys[0x61] = Key::A; mapKeys[0x62] = Key::B; mapKeys[0x63] = Key::C; mapKeys[0x64] = Key::D; mapKeys[0x65] = Key::E;
@@ -4957,6 +4974,23 @@ namespace olc
 		virtual olc::rcode SetWindowTitle(const std::string& s) override
 		{
 			X11::XStoreName(olc_Display, olc_Window, s.c_str());
+			return olc::OK;
+		}
+		
+		virtual olc::rcode ShowSystemCursor(bool state) override
+		{
+			using namespace X11;
+			
+			// show the damn cursor!
+			if(state)
+			{
+				XUndefineCursor(olc_Display, olc_Window);
+				return olc::OK;
+			}
+
+			// if we're here, we're hiding the cursor, mwahahahahahaha
+			XDefineCursor(olc_Display, olc_Window, olc_InvisibleCursor);
+			
 			return olc::OK;
 		}
 
