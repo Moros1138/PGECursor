@@ -5341,6 +5341,12 @@ namespace olc {
 			glutSetWindowTitle(s.c_str());
 			return olc::OK;
 		}
+		
+		// NOT IMPLEMENTED
+		virtual olc::rcode ShowSystemCursor(bool state) override
+		{
+			return olc::OK;
+		}
 
 		virtual olc::rcode StartSystemEventLoop() override {
 			glutMainLoop();
