@@ -4,12 +4,15 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/include/**",
+                // "/home/jon/opt/emsdk/upstream/include/c++/v1/",
+                // "/home/jon/opt/emsdk/upstream/emscripten/system/include/"
                 "/usr/lib/gcc/x86_64-pc-linux-gnu/12.1.0/include",
                 "/usr/local/include",
                 "/usr/lib/gcc/x86_64-pc-linux-gnu/12.1.0/include-fixed",
                 "/usr/local/include",
                 "/usr/include"
             ],
+            // "defines": ["__EMSCRIPTEN__"],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",
             "cStandard": "c11",
