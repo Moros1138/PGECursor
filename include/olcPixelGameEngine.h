@@ -5342,9 +5342,15 @@ namespace olc {
 			return olc::OK;
 		}
 		
-		// NOT IMPLEMENTED
 		virtual olc::rcode ShowSystemCursor(bool state) override
 		{
+			if(state)
+			{
+				glutSetCursor(GLUT_CURSOR_INHERIT);
+				return olc::OK;
+			}
+
+			glutSetCursor(GLUT_CURSOR_NONE);
 			return olc::OK;
 		}
 
