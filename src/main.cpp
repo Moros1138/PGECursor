@@ -37,7 +37,6 @@ public:
 	}
 };
 
-
 int main()
 {
 	Example demo;
