@@ -2,3 +2,4 @@ obj/*.o
 bin/PGECursor
 bin/PGECursor.exe
 .vscode/*
+.DS_Store
