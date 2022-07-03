@@ -5761,9 +5761,24 @@ namespace olc
 		virtual olc::rcode SetWindowTitle(const std::string& s) override
 		{ emscripten_set_window_title(s.c_str()); return olc::OK; }
 		
-		// NOT IMPLEMENTED
+		
 		virtual olc::rcode ShowSystemCursor(bool state) override
 		{
+			if(state)
+			{
+				// show the cursor
+				EM_ASM({
+					Module.canvas.style.cursor = "";
+				});
+
+				return olc::OK;
+			}
+			
+			// if we make it here, hide the damn thing!!!
+			EM_ASM({
+				Module.canvas.style.cursor = 'none';
+			});
+
 			return olc::OK;
 		}
 
